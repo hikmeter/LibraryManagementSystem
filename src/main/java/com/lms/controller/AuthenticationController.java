@@ -1,11 +1,17 @@
 package com.lms.controller;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.lms.pojo.User;
+import com.lms.service.UserService;
+import com.lms.serviceImpl.UserServiceImpl;
 
 /**
  * Servlet implementation class AuthenticationController
@@ -26,8 +32,25 @@ public class AuthenticationController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String action = request.getParameter("action");
+		if("checkLogin".equalsIgnoreCase(action))
+		{
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			UserService userService = new UserServiceImpl();
+			User user = userService.checkLogin(username, password);
+			if(user != null) {
+				System.out.print("Kullanıcı bulundu!");
+			}
+			else {
+				request.setAttribute("errorMessage", "Hatalı e-posta adresi ya da şifre!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/login.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else {
+			System.out.print("Herhangi bir method bulunamadı!");
+		}
 	}
 
 	/**

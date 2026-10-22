@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DbUtil {
 	private static final String url = "jdbc:mysql://localhost:3306/library_db?useSSL=false";
 	private static final String username = "root";
-	private static final String password = "QWERTY123";
+	private static final String password = "QWERT123";
 	
 	static {
 		try {

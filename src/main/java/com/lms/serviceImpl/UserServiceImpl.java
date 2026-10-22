@@ -10,8 +10,7 @@ public class UserServiceImpl implements UserService {
 	UserDao userDao = new UserDaoImpl();
 	@Override
 	public User checkLogin(String username, String password) {
-		userDao.checkLogin(username, password);
-		return null;
+		return userDao.checkLogin(username, password);
 	}
 
 }

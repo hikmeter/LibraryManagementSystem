@@ -40,7 +40,8 @@ public class AuthenticationController extends HttpServlet {
 			UserService userService = new UserServiceImpl();
 			User user = userService.checkLogin(username, password);
 			if(user != null) {
-				System.out.print("Kullanıcı bulundu!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/dashboard.jsp");
+				dispatcher.forward(request, response);
 			}
 			else {
 				request.setAttribute("errorMessage", "Hatalı e-posta adresi ya da şifre!");

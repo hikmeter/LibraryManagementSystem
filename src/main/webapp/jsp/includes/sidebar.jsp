@@ -1,0 +1,15 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+        <div class="position-sticky sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link active" href="dashboard.html"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+				<li class="nav-item"><a class="nav-link" href="assign_book.html"><i class="bi bi-arrow-right-circle"></i>Kitap Ödünç Ver</a></li>
+                <li class="nav-item"><a class="nav-link" href="return_book.html"><i class="bi bi-arrow-left-circle"></i>Kitap Al</a></li>
+                <li class="nav-item"><a class="nav-link" href="books.html"><i class="bi bi-book"></i>Kitaplar</a></li>
+                <li class="nav-item"><a class="nav-link" href="add_book.html"><i class="bi bi-plus-circle"></i>Kitap Ekle</a></li>
+                <li class="nav-item"><a class="nav-link" href="users.html"><i class="bi bi-people"></i>Kullanıcılar</a></li>
+                <li class="nav-item"><a class="nav-link" href="add_user.html"><i class="bi bi-person-plus"></i>Kullanıcı Ekle</a></li>
+            </ul>
+        </div>
+    </nav>

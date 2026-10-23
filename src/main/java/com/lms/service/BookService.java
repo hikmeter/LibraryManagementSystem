@@ -12,4 +12,6 @@ public interface BookService {
 	public List<Book> getAllBooks();
 	
 	public List<Book> getAllBooksByStatus(String status);
+	
+	public Book getBookById(long id);
 }

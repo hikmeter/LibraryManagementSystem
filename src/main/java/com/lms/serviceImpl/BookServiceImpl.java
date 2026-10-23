@@ -17,20 +17,23 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public boolean updateBook(Book book) {
-		// TODO Auto-generated method stub
-		return false;
+		return bookDao.updateBook(book);
 	}
 
 	@Override
 	public List<Book> getAllBooks() {
-		// TODO Auto-generated method stub
-		return null;
+		return bookDao.getAllBooks();
 	}
 
 	@Override
 	public List<Book> getAllBooksByStatus(String status) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Book getBookById(long id) {
+		return bookDao.getBookById(id);
 	}
 
 }

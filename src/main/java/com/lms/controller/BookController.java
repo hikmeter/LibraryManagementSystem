@@ -1,7 +1,9 @@
 package com.lms.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -56,15 +58,25 @@ public class BookController extends HttpServlet {
 			book.setTitle(title);
 			book.setTotalCopies(Integer.parseInt(totalCopies));
 			book.setCreatedAt(new Date());
-			book.setStatus("Active");
+			book.setStatus("Uygun");
 			
 			BookService bookService = new BookServiceImpl();
 			Boolean isAdded = bookService.addBook(book);
 			
 			if(isAdded) {
-				request.setAttribute("successMessage", "Kitap başarıyla kaydedildi!");
-				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/addBook.jsp");
-				dispatcher.forward(request, response);
+				List bookList = new ArrayList<>();
+				bookList = bookService.getAllBooks();
+				if(bookList != null && bookList.size() > 0) {
+					request.setAttribute("bookList", bookList);
+					request.setAttribute("successMessage", "Kitap başarıyla kaydedildi!");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+					dispatcher.forward(request, response);					
+				}
+				else {
+					request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/addBook.jsp");
+					dispatcher.forward(request, response);
+				}
 			}
 			else {
 				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
@@ -72,9 +84,76 @@ public class BookController extends HttpServlet {
 				dispatcher.forward(request, response);
 			}
 			}
+		else if("allBooksList".equalsIgnoreCase(action)) {
+			List bookList = new ArrayList<>();
+			BookService bookService = new BookServiceImpl();
+			bookList = bookService.getAllBooks();
+			if(bookList != null && bookList.size() > 0) {
+				request.setAttribute("bookList", bookList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+				dispatcher.forward(request, response);
+		}
+		}
+		else if("viewBook".equalsIgnoreCase(action)) {
+			long BookId = Integer.parseInt(request.getParameter("bookId"));
+			List bookList = new ArrayList<>();
+			BookService bookService = new BookServiceImpl();
+			Book book = bookService.getBookById(BookId);
+			if(book != null) {
+				request.setAttribute("book", book);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editBook.jsp");
+				dispatcher.forward(request, response);
+			}
+			else {
+				bookList = bookService.getAllBooks();
+				if(bookList != null && bookList.size() > 0) {
+					request.setAttribute("errorMessage", "Kitap bilgisi bulunamadı!");
+					request.setAttribute("bookList", bookList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+					dispatcher.forward(request, response);
+			}
+		}
+		}
+		else if("updateBook".equalsIgnoreCase(action)) {
+			String title = request.getParameter("title");
+			String author = request.getParameter("author");
+			String isbn = request.getParameter("isbn");
+			String category = request.getParameter("category");
+			String publisher = request.getParameter("publisher");
+			String totalCopies = request.getParameter("totalCopies");
+			long bookId = Integer.parseInt(request.getParameter("bookId"));
+			
+			Book book = new Book();
+			book.setAuthor(author);
+			book.setCategory(category);
+			book.setIsbn(isbn);
+			book.setPublisher(publisher);
+			book.setTitle(title);
+			book.setTotalCopies(Integer.parseInt(totalCopies));
+			book.setBookId(bookId);
+			
+			BookService bookService = new BookServiceImpl();
+			Boolean isUpdated = bookService.updateBook(book);
+			if(isUpdated) {
+				List bookList = new ArrayList<>();
+				bookList = bookService.getAllBooks();
+				if(bookList != null && bookList.size() > 0) {
+					request.setAttribute("bookList", bookList);
+					request.setAttribute("successMessage", "Kitap başarıyla güncellendi!");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+					dispatcher.forward(request, response);
+			}
+			}
+			else {
+				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editBook.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
 		else {
 			System.out.print("Herhangi bir method bulunamadı!");
 		}
+		
 	}
 
 	/**

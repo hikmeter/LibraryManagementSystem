@@ -47,14 +47,14 @@
                         <div class="form-floating">
                             <select class="form-select" id="category" name="category">
                                 <option selected disabled value="">Kategori Seçin</option>
-                                <option value="fiction">Kurgu</option>
-                                <option value="non-fiction">Sıradışı</option>
-                                <option value="science">Bilim</option>
-                                <option value="technology">Teknoloji</option>
-                                <option value="history">Tarih</option>
-                                <option value="biography">Biyografi</option>
-                                <option value="mystery">Gizem</option>
-                                <option value="romance">Romantik</option>
+                                <option value="Kurgu">Kurgu</option>
+                                <option value="Sıradışı">Sıradışı</option>
+                                <option value="Bilim">Bilim</option>
+                                <option value="Teknoloji">Teknoloji</option>
+                                <option value="Tarih">Tarih</option>
+                                <option value="Biyografi">Biyografi</option>
+                                <option value="Gizem">Gizem</option>
+                                <option value="Romantik">Romantik</option>
                             </select>
                             <label for="category"><i class="bi bi-collection me-2"></i>Kategori</label>
                         </div>

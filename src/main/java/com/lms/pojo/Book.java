@@ -13,6 +13,7 @@ public class Book {
 	private int availableCopies;
 	private String status;
 	private Date createdAt;
+	private boolean isDeleted;
 	
 	public long getBookId() {
 		return bookId;
@@ -73,5 +74,11 @@ public class Book {
 	}
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

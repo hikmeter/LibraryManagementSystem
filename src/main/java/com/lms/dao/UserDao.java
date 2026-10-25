@@ -10,4 +10,6 @@ public interface UserDao {
 	public boolean addUser(User user);
 	
 	public List<User> getAllUsers();
+	
+	public boolean deleteUser(long id);
 }

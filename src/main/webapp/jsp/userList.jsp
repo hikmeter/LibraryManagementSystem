@@ -54,10 +54,11 @@
 											<td>${user.createdAt }</td>
 											<td><a href="edit_user.html" class="action-btn edit"
 												title="Kullanıcıyı Düzenle"><i
-													class="bi bi-pencil-square"></i></a>
-												<button class="action-btn delete" title="Kullanıcıyı Sil">
-													<i class="bi bi-trash-fill"></i>
-												</button></td>
+													class="bi bi-pencil-square"></i></a> <a
+												href="UserController?action=deleteUser&userId=${user.userId}"
+												class="action-btn delete" title="Kullanıcıyı Sil"> <i
+													class="bi bi-trash-fill"></i>
+											</a></td>
 										</tr>
 									</c:forEach>
 								</tbody>

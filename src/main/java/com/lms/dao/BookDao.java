@@ -14,4 +14,6 @@ public interface BookDao {
 	public List<Book> getAllBooksByStatus(String status);
 	
 	public Book getBookById(long id);
+	
+	public boolean deleteBook(long id);
 }

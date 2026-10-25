@@ -12,6 +12,7 @@ public class User {
 	private String phoneNo;
 	private String address;
 	private Date createdAt;
+	private boolean isDeleted;
 	
 	public long getUserId() {
 		return userId;
@@ -66,5 +67,11 @@ public class User {
 	}
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

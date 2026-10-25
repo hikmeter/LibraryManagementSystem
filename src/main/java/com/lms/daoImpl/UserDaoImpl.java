@@ -120,7 +120,7 @@ public class UserDaoImpl implements UserDao {
         ArrayList<User> userList = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM users WHERE role = 'USER' ORDER BY user_id DESC";
+            String sql = "SELECT * FROM users WHERE role = 'USER' && is_deleted = FALSE ORDER BY user_id DESC";
 
             connection = DbUtil.getConnection();
             ps = connection.prepareStatement(sql);
@@ -161,6 +161,48 @@ public class UserDaoImpl implements UserDao {
         }
 
         return userList;
+	}
+
+	@Override
+	public boolean deleteUser(long id) {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "UPDATE users SET is_deleted = TRUE "
+                    + "WHERE user_id = ?";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+
+            ps.setLong(1, id);
+
+            int i = ps.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
 	}
 	}
 

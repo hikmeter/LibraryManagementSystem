@@ -36,4 +36,9 @@ public class BookServiceImpl implements BookService {
 		return bookDao.getBookById(id);
 	}
 
+	@Override
+	public boolean deleteBook(long id) {
+		return bookDao.deleteBook(id);
+	}
+
 }

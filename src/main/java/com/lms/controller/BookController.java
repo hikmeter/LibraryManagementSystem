@@ -143,7 +143,28 @@ public class BookController extends HttpServlet {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editBook.jsp");
 				dispatcher.forward(request, response);
 			}
-		} else {
+		}
+		else if("deleteBook".equalsIgnoreCase(action)) {
+			long bookId = Integer.parseInt(request.getParameter("bookId"));
+			List bookList = new ArrayList<>();
+			BookService bookService = new BookServiceImpl();
+			boolean isDeleted = bookService.deleteBook(bookId);
+			if(isDeleted) {
+				bookList = bookService.getAllBooks();
+				if (bookList != null && bookList.size() > 0) {
+					request.setAttribute("bookList", bookList);
+					request.setAttribute("successMessage", "Kitap başarıyla silindi!");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+					dispatcher.forward(request, response);
+				}
+			}
+			else {
+				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else {
 			System.out.print("Herhangi bir method bulunamadı!");
 		}
 

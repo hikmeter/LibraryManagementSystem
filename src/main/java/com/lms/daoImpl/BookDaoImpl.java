@@ -124,7 +124,7 @@ public class BookDaoImpl implements BookDao {
         ArrayList<Book> bookList = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM books ORDER BY book_id DESC";
+            String sql = "SELECT * FROM books WHERE is_deleted = FALSE ORDER BY book_id DESC";
 
             connection = DbUtil.getConnection();
             ps = connection.prepareStatement(sql);
@@ -226,4 +226,46 @@ public class BookDaoImpl implements BookDao {
 
         return null;
     }
+
+	@Override
+	public boolean deleteBook(long id) {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "UPDATE books SET is_deleted = TRUE "
+                    + "WHERE book_id = ?";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+
+            ps.setLong(1, id);
+
+            int i = ps.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+	}
 }

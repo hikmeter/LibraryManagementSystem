@@ -91,6 +91,26 @@ public class UserController extends HttpServlet {
 				dispatcher.forward(request, response);
 			}
 		}
+		else if("deleteUser".equalsIgnoreCase(action)) {
+			long userId = Integer.parseInt(request.getParameter("userId"));
+			List userList = new ArrayList<>();
+			UserService userService = new UserServiceImpl();
+			boolean isDeleted = userService.deleteUser(userId);
+			if(isDeleted) {
+				userList = userService.getAllUsers();
+				if (userList != null && userList.size() > 0) {
+					request.setAttribute("successMessage", "Kullanıcı başarıyla silindi!");
+					request.setAttribute("userList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				}
+			}
+			else {
+				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/userList.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
 	}
 
 	/**

@@ -45,7 +45,7 @@
                             <td><span class="badge bg-success">${book.status}</span></td>
                             <td>
                                 <a href="BookController?action=viewBook&bookId=${book.bookId}" class="action-btn edit" title="Kitabı Düzenle"><i class="bi bi-pencil-square"></i></a>
-                                <button class="action-btn delete" title="Kitabı Sil"><i class="bi bi-trash-fill"></i></button>
+                                <a href="BookController?action=deleteBook&bookId=${book.bookId}" class="action-btn delete" title="Kitabı Sil"><i class="bi bi-trash-fill"></i></a>
                             </td>
                         </tr>
                         </c:forEach>

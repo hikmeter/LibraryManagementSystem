@@ -111,6 +111,59 @@ public class UserController extends HttpServlet {
 				dispatcher.forward(request, response);
 			}
 		}
+		else if("viewUser".equalsIgnoreCase(action)) {
+			long userId = Integer.parseInt(request.getParameter("userId"));
+			List userList = new ArrayList<>();
+			UserService userService = new UserServiceImpl();
+			User user = userService.getUserById(userId);
+			if(user != null) {
+				request.setAttribute("user", user);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editUser.jsp");
+				dispatcher.forward(request, response);
+			}
+			else {
+				userList = userService.getAllUsers();
+				if (userList != null && userList.size() > 0) {
+					request.setAttribute("errorMessage", "Kullanıcı bilgisi bulunamadı!");
+					request.setAttribute("bookList", userList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+					dispatcher.forward(request, response);
+				}
+		}
+		}
+		else if("updateUser".equalsIgnoreCase(action)) {
+			String firstName = request.getParameter("firstName");
+			String lastName = request.getParameter("lastName");
+			String email = request.getParameter("email");
+			String phone = request.getParameter("phone");
+			String address = request.getParameter("address");
+			long userId = Integer.parseInt(request.getParameter("userId"));
+			
+			User user = new User();
+			user.setAddress(address);
+			user.setEmail(email);
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setPhoneNo(phone);
+			user.setUserId(userId);
+			
+			UserService userService = new UserServiceImpl();
+			boolean isUpdated = userService.updateUser(user);
+			if(isUpdated) {
+				List userList = new ArrayList<>();
+				userList = userService.getAllUsers();
+				if (userList != null && userList.size() > 0) {
+					request.setAttribute("userList", userList);
+					request.setAttribute("successMessage", "Kullanıcı başarıyla güncellendi!");
+					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/userList.jsp");
+					dispatcher.forward(request, response);
+				}
+			} else {
+				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editUser.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
 	}
 
 	/**

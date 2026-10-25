@@ -9,7 +9,11 @@ public interface UserService {
 	
 	public boolean addUser(User user);
 	
+	public boolean updateUser(User user);
+	
 	public List<User> getAllUsers();
+	
+	public User getUserById(long id);
 	
 	public boolean deleteUser(long id);
 }

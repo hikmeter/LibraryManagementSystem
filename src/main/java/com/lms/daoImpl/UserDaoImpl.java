@@ -204,6 +204,104 @@ public class UserDaoImpl implements UserDao {
 
         return false;
 	}
+
+	@Override
+	public boolean updateUser(User user) {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone_no = ?, "
+                    + "address = ? WHERE user_id = ?";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getPhoneNo());
+            ps.setString(5, user.getAddress());
+            ps.setLong(6, user.getUserId());
+       
+            int i = ps.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+	}
+
+	@Override
+	public User getUserById(long id) {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "SELECT * FROM users WHERE user_id = ?";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                
+                user.setUserId(rs.getLong("user_id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getString("role"));
+                user.setPhoneNo(rs.getString("phone_no"));
+                user.setAddress(rs.getString("address"));
+                user.setCreatedAt(rs.getDate("created_at"));
+                
+                return user;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+	}
 	}
 
 

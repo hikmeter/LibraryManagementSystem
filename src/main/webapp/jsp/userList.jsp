@@ -52,7 +52,7 @@
 											<td>${user.email }</td>
 											<td><span class="badge bg-danger">${user.role }</span></td>
 											<td>${user.createdAt }</td>
-											<td><a href="edit_user.html" class="action-btn edit"
+											<td><a href="UserController?action=viewUser&userId=${user.userId}" class="action-btn edit"
 												title="Kullanıcıyı Düzenle"><i
 													class="bi bi-pencil-square"></i></a> <a
 												href="UserController?action=deleteUser&userId=${user.userId}"

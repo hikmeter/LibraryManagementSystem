@@ -8,8 +8,8 @@
                 <li class="nav-item"><a class="nav-link" href="return_book.html"><i class="bi bi-arrow-left-circle"></i>Kitap Al</a></li>
                 <li class="nav-item"><a class="nav-link" href="BookController?action=allBooksList"><i class="bi bi-book"></i>Kitaplar</a></li>
                 <li class="nav-item"><a class="nav-link" href="BookController?action=showAddBook"><i class="bi bi-plus-circle"></i>Kitap Ekle</a></li>
-                <li class="nav-item"><a class="nav-link" href="users.html"><i class="bi bi-people"></i>Kullanıcılar</a></li>
-                <li class="nav-item"><a class="nav-link" href="add_user.html"><i class="bi bi-person-plus"></i>Kullanıcı Ekle</a></li>
+                <li class="nav-item"><a class="nav-link" href="UserController?action=allUsersList"><i class="bi bi-people"></i>Kullanıcılar</a></li>
+                <li class="nav-item"><a class="nav-link" href="UserController?action=showAddUser"><i class="bi bi-person-plus"></i>Kullanıcı Ekle</a></li>
             </ul>
         </div>
     </nav>

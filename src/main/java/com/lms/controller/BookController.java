@@ -22,25 +22,26 @@ import com.lms.serviceImpl.BookServiceImpl;
 @WebServlet("/BookController")
 public class BookController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public BookController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public BookController() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getParameter("action");
-		if("showAddBook".equalsIgnoreCase(action)) {
+		if ("showAddBook".equalsIgnoreCase(action)) {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/addBook.jsp");
 			dispatcher.forward(request, response);
-		}
-		else if("addBook".equalsIgnoreCase(action)) {
+		} else if ("addBook".equalsIgnoreCase(action)) {
 			String title = request.getParameter("title");
 			String author = request.getParameter("author");
 			String isbn = request.getParameter("isbn");
@@ -48,10 +49,10 @@ public class BookController extends HttpServlet {
 			String publisher = request.getParameter("publisher");
 			String availableCopies = request.getParameter("availableCopies");
 			String totalCopies = request.getParameter("totalCopies");
-			
+
 			Book book = new Book();
 			book.setAuthor(author);
-			book.setAvailableCopies(Integer.parseInt(availableCopies));		
+			book.setAvailableCopies(Integer.parseInt(availableCopies));
 			book.setCategory(category);
 			book.setIsbn(isbn);
 			book.setPublisher(publisher);
@@ -59,62 +60,56 @@ public class BookController extends HttpServlet {
 			book.setTotalCopies(Integer.parseInt(totalCopies));
 			book.setCreatedAt(new Date());
 			book.setStatus("Uygun");
-			
+
 			BookService bookService = new BookServiceImpl();
 			Boolean isAdded = bookService.addBook(book);
-			
-			if(isAdded) {
+
+			if (isAdded) {
 				List bookList = new ArrayList<>();
 				bookList = bookService.getAllBooks();
-				if(bookList != null && bookList.size() > 0) {
+				if (bookList != null && bookList.size() > 0) {
 					request.setAttribute("bookList", bookList);
 					request.setAttribute("successMessage", "Kitap başarıyla kaydedildi!");
 					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
-					dispatcher.forward(request, response);					
-				}
-				else {
+					dispatcher.forward(request, response);
+				} else {
 					request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
 					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/addBook.jsp");
 					dispatcher.forward(request, response);
 				}
-			}
-			else {
+			} else {
 				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/addBook.jsp");
 				dispatcher.forward(request, response);
 			}
-			}
-		else if("allBooksList".equalsIgnoreCase(action)) {
+		} else if ("allBooksList".equalsIgnoreCase(action)) {
 			List bookList = new ArrayList<>();
 			BookService bookService = new BookServiceImpl();
 			bookList = bookService.getAllBooks();
-			if(bookList != null && bookList.size() > 0) {
+			if (bookList != null && bookList.size() > 0) {
 				request.setAttribute("bookList", bookList);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
 				dispatcher.forward(request, response);
-		}
-		}
-		else if("viewBook".equalsIgnoreCase(action)) {
+			}
+		} else if ("viewBook".equalsIgnoreCase(action)) {
 			long BookId = Integer.parseInt(request.getParameter("bookId"));
 			List bookList = new ArrayList<>();
 			BookService bookService = new BookServiceImpl();
 			Book book = bookService.getBookById(BookId);
-			if(book != null) {
+			if (book != null) {
 				request.setAttribute("book", book);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editBook.jsp");
 				dispatcher.forward(request, response);
-			}
-			else {
+			} else {
 				bookList = bookService.getAllBooks();
-				if(bookList != null && bookList.size() > 0) {
+				if (bookList != null && bookList.size() > 0) {
 					request.setAttribute("errorMessage", "Kitap bilgisi bulunamadı!");
 					request.setAttribute("bookList", bookList);
 					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
 					dispatcher.forward(request, response);
+				}
 			}
-		}
-		}
-		else if("updateBook".equalsIgnoreCase(action)) {
+		} else if ("updateBook".equalsIgnoreCase(action)) {
 			String title = request.getParameter("title");
 			String author = request.getParameter("author");
 			String isbn = request.getParameter("isbn");
@@ -122,7 +117,7 @@ public class BookController extends HttpServlet {
 			String publisher = request.getParameter("publisher");
 			String totalCopies = request.getParameter("totalCopies");
 			long bookId = Integer.parseInt(request.getParameter("bookId"));
-			
+
 			Book book = new Book();
 			book.setAuthor(author);
 			book.setCategory(category);
@@ -131,35 +126,35 @@ public class BookController extends HttpServlet {
 			book.setTitle(title);
 			book.setTotalCopies(Integer.parseInt(totalCopies));
 			book.setBookId(bookId);
-			
+
 			BookService bookService = new BookServiceImpl();
 			Boolean isUpdated = bookService.updateBook(book);
-			if(isUpdated) {
+			if (isUpdated) {
 				List bookList = new ArrayList<>();
 				bookList = bookService.getAllBooks();
-				if(bookList != null && bookList.size() > 0) {
+				if (bookList != null && bookList.size() > 0) {
 					request.setAttribute("bookList", bookList);
 					request.setAttribute("successMessage", "Kitap başarıyla güncellendi!");
 					RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
 					dispatcher.forward(request, response);
-			}
-			}
-			else {
+				}
+			} else {
 				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/editBook.jsp");
 				dispatcher.forward(request, response);
 			}
-		}
-		else {
+		} else {
 			System.out.print("Herhangi bir method bulunamadı!");
 		}
-		
+
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

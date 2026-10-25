@@ -1,6 +1,7 @@
 package com.lms.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +12,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.lms.pojo.Book;
+import com.lms.pojo.BookIssued;
+import com.lms.pojo.User;
 import com.lms.service.BookService;
+import com.lms.service.UserService;
 import com.lms.serviceImpl.BookServiceImpl;
+import com.lms.serviceImpl.UserServiceImpl;
 
 /**
  * Servlet implementation class BookController
@@ -161,6 +167,60 @@ public class BookController extends HttpServlet {
 			else {
 				request.setAttribute("errorMessage", "Bir şeyler ters gitti!");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/bookList.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else if("showAssignBook".equalsIgnoreCase(action)) {
+			UserService userService = new UserServiceImpl();
+			BookService bookService = new BookServiceImpl();
+			
+			List<Book> bookList = new ArrayList<>();
+			bookList = bookService.getAllAvailableBookList();
+			
+			List<User> userList = new ArrayList<>();
+			userList = userService.getAllUsers();
+			
+			if(bookList != null && bookList.size() > 0 && userList != null && userList.size() > 0) {
+				request.setAttribute("bookList", bookList);
+				request.setAttribute("userList", userList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/assignBook.jsp");
+				dispatcher.forward(request, response);
+			}
+			else {
+				request.setAttribute("errorMessage", "Kitap ya da kullanıcı verileri çekilemedi!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/assignBook.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else if("assignBook".equalsIgnoreCase(action)) {
+			long bookId = Integer.parseInt(request.getParameter("bookId"));
+			long userId = Integer.parseInt(request.getParameter("userId"));
+			String dueDateParam = request.getParameter("dueDate");
+			LocalDate dueDate = LocalDate.parse(dueDateParam);
+			String assignmentNotes = request.getParameter("assignmentNotes");
+			
+			Book book = new Book();
+			book.setBookId(bookId);
+			
+			User user = new User();
+			user.setUserId(userId);
+			
+			BookIssued bookIssued = new BookIssued();
+			bookIssued.setAssignmentNotes(assignmentNotes);
+			bookIssued.setBook(book);
+			bookIssued.setUser(user);
+			bookIssued.setDueDate(dueDate);
+			
+			BookService bookService = new BookServiceImpl();
+			boolean isAssigned = bookService.assignBook(bookIssued);
+			if(isAssigned) {
+				HttpSession session = request.getSession();
+			    session.setAttribute("successMessage", "Kitap verme işlemi başarılı!");
+			    response.sendRedirect("BookController?action=showAssignBook");
+			}
+			else {
+				request.setAttribute("errorMessage", "Kitap verme işlemi başarısız!");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/assignBook.jsp");
 				dispatcher.forward(request, response);
 			}
 		}

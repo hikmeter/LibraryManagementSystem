@@ -76,4 +76,36 @@ public class BookServiceImpl implements BookService {
 		return bookDao.updateAvailableBook(bookId, availableCopies);
 	}
 
+	@Override
+	public List<BookIssued> getAllIssuedBookList() {
+		return bookDao.getAllIssuedBookList();
+	}
+
+	@Override
+	public BookIssued getBookIssuedById(long id) {
+		return bookDao.getBookIssuedById(id);
+	}
+
+	@Override
+	public boolean updateBookReturn(BookIssued bookIssued) {
+		bookIssued.setStatus("RETURNED");
+		
+		boolean isReturned = false;
+		BookIssued bookIssued2 = bookDao.getBookIssuedById(bookIssued.getIssueID());
+		if(bookIssued2 != null) {
+			int availableCopies = bookIssued2.getBook().getAvailableCopies() + 1;
+			boolean isUpdated = bookDao.updateAvailableBook(bookIssued2.getBook().getBookId(), availableCopies);
+			if(isUpdated) {
+				isReturned = bookDao.updateBookReturn(bookIssued);
+				if(!isReturned) {
+					BookIssued bookIssued3 = bookDao.getBookIssuedById(bookIssued.getIssueID());
+					int newAvailableCopies = bookIssued3.getBook().getAvailableCopies() + 1;
+					bookDao.updateAvailableBook(bookIssued3.getBook().getBookId(), newAvailableCopies);
+				}
+			}
+			
+		}
+		return isReturned;
+	}
+
 }

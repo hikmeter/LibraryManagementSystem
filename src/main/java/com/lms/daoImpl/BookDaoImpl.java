@@ -12,6 +12,7 @@ import java.util.List;
 import com.lms.dao.BookDao;
 import com.lms.pojo.Book;
 import com.lms.pojo.BookIssued;
+import com.lms.pojo.User;
 import com.lms.util.DbUtil;
 
 public class BookDaoImpl implements BookDao {
@@ -132,20 +133,7 @@ public class BookDaoImpl implements BookDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Book book = new Book();
-                
-                book.setBookId(rs.getLong("book_id"));
-                book.setAuthor(rs.getString("author"));
-                book.setAvailableCopies(rs.getInt("available_copies"));
-                book.setCategory(rs.getString("category"));
-                book.setCreatedAt(rs.getDate("created_at"));
-                book.setIsbn(rs.getString("isbn"));
-                book.setPublisher(rs.getString("publisher"));
-                book.setStatus(rs.getString("status"));
-                book.setTitle(rs.getString("title"));
-                book.setTotalCopies(rs.getInt("total_copies"));
-
-                bookList.add(book);
+                bookList.add(mapBookRecord(rs));
             }
 
         } catch (Exception e) {
@@ -191,20 +179,7 @@ public class BookDaoImpl implements BookDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Book book = new Book();
-                
-                book.setBookId(rs.getLong("book_id"));
-                book.setAuthor(rs.getString("author"));
-                book.setAvailableCopies(rs.getInt("available_copies"));
-                book.setCategory(rs.getString("category"));
-                book.setCreatedAt(rs.getDate("created_at"));
-                book.setIsbn(rs.getString("isbn"));
-                book.setPublisher(rs.getString("publisher"));
-                book.setStatus(rs.getString("status"));
-                book.setTitle(rs.getString("title"));
-                book.setTotalCopies(rs.getInt("total_copies"));
-
-                return book;
+                return mapBookRecord(rs);
             }
 
         } catch (Exception e) {
@@ -286,20 +261,7 @@ public class BookDaoImpl implements BookDao {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Book book = new Book();
-                
-                book.setBookId(rs.getLong("book_id"));
-                book.setAuthor(rs.getString("author"));
-                book.setAvailableCopies(rs.getInt("available_copies"));
-                book.setCategory(rs.getString("category"));
-                book.setCreatedAt(rs.getDate("created_at"));
-                book.setIsbn(rs.getString("isbn"));
-                book.setPublisher(rs.getString("publisher"));
-                book.setStatus(rs.getString("status"));
-                book.setTitle(rs.getString("title"));
-                book.setTotalCopies(rs.getInt("total_copies"));
-
-                bookList.add(book);
+                bookList.add(mapBookRecord(rs));
             }
 
         } catch (Exception e) {
@@ -415,4 +377,178 @@ public class BookDaoImpl implements BookDao {
 
         return false;
     }
+
+	@Override
+	public List<BookIssued> getAllIssuedBookList() {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        ArrayList<BookIssued> bookList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT bi.*, b.*,u.* FROM book_issued bi inner join"
+            		+ " books b on bi.book_id = b.book_id inner join users u on u.user_id = bi.user_id WHERE bi.status = 'ISSUED'";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                bookList.add(mapIssuedRecord(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bookList;
+	}
+
+	@Override
+	public BookIssued getBookIssuedById(long id) {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "SELECT bi.*, b.*,u.* FROM book_issued bi inner join"
+            		+ " books b on bi.book_id = b.book_id inner join users u on u.user_id = bi.user_id WHERE bi.issue_id = ?";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                return mapIssuedRecord(rs);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+	}
+
+	@Override
+	public boolean updateBookReturn(BookIssued bookIssued) {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "UPDATE book_issued SET return_date = ?, book_condition = ?, return_notes = ?, status = ? "
+                    + "WHERE issue_id = ?";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+
+            ps.setDate(1, Date.valueOf(bookIssued.getReturnDate()));
+            ps.setString(2, bookIssued.getBookCondition());
+            ps.setString(3, bookIssued.getReturnNotes());
+            ps.setString(4, bookIssued.getStatus());
+            ps.setLong(5, bookIssued.getIssueID());
+
+            int i = ps.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+	
+	
+	public Book mapBookRecord(ResultSet rs) throws SQLException {
+	    Book book = new Book();
+
+	    book.setBookId(rs.getLong("book_id"));
+	    book.setAuthor(rs.getString("author"));
+	    book.setAvailableCopies(rs.getInt("available_copies"));
+	    book.setCategory(rs.getString("category"));
+	    book.setCreatedAt(rs.getDate("created_at"));
+	    book.setIsbn(rs.getString("isbn"));
+	    book.setPublisher(rs.getString("publisher"));
+	    book.setStatus(rs.getString("status"));
+	    book.setTitle(rs.getString("title"));
+	    book.setTotalCopies(rs.getInt("total_copies"));
+
+	    return book;
+	}
+	
+	public BookIssued mapIssuedRecord(ResultSet rs) throws SQLException {
+	    BookIssued bookIssued = new BookIssued();
+
+	    // Ödünç alma bilgileri
+	    bookIssued.setIssueID(rs.getLong("issue_id"));
+	    bookIssued.setIssueDate(rs.getDate("issue_date"));
+	    bookIssued.setDueDate(rs.getDate("due_date").toLocalDate());
+	    bookIssued.setStatus(rs.getString("status"));
+	    bookIssued.setBookCondition(rs.getString("book_condition"));
+	    bookIssued.setAssignmentNotes(rs.getString("assignment_notes"));
+	    bookIssued.setReturnNotes(rs.getString("return_notes"));
+
+	    // Kitap bilgileri
+	    Book book = mapBookRecord(rs);
+	    bookIssued.setBook(book);
+
+	    // Kullanıcı bilgileri
+	    User user = new User();
+	    user.setUserId(rs.getLong("user_id"));
+	    user.setFirstName(rs.getString("first_name"));
+	    user.setLastName(rs.getString("last_name"));
+	    user.setEmail(rs.getString("email"));
+
+	    bookIssued.setUser(user);
+
+	    return bookIssued;
+	}
 	}

@@ -23,4 +23,10 @@ public interface BookDao {
 	public boolean assignBook(BookIssued bookIssued);
 	
 	public boolean updateAvailableBook(long bookId, int availableCopies);
+	
+	public List<BookIssued> getAllIssuedBookList();
+	
+	public BookIssued getBookIssuedById(long id);
+	
+	public boolean updateBookReturn(BookIssued bookIssued);
 }

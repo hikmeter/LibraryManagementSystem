@@ -224,10 +224,85 @@ public class BookController extends HttpServlet {
 				dispatcher.forward(request, response);
 			}
 		}
+		else if("showReturnBook".equalsIgnoreCase(action)){
+			BookService bookService = new BookServiceImpl();
+			List<BookIssued> issuedList = bookService.getAllIssuedBookList();
+			if(issuedList != null && issuedList.size() > 0) {
+				LocalDate today = LocalDate.now();
+				for(BookIssued bookIssued : issuedList) {
+					LocalDate dueDate = bookIssued.getDueDate();
+					if(dueDate.isAfter(today)) {
+						bookIssued.setReturnStatus("SÜRE VAR");
+					}
+					else if(dueDate.isEqual(today)) {
+						bookIssued.setReturnStatus("BUGÜN");
+					}
+					else {
+						bookIssued.setReturnStatus("GEÇMİŞ");
+					}
+				}
+				System.out.println("Listelenen ödünç kayıt sayısı: "
+					    + (issuedList == null ? 0 : issuedList.size()));
+				request.setAttribute("issuedList", issuedList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/returnBook.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else if("showReturnBookDetail".equalsIgnoreCase(action)) {
+			long issueId = Integer.parseInt(request.getParameter("issueID"));
+			BookService bookService = new BookServiceImpl();
+			BookIssued bookIssued = bookService.getBookIssuedById(issueId);
+			if(bookIssued != null) {
+				request.setAttribute("bookIssued", bookIssued);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/showReturnBookDetail.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else if("returnBook".equalsIgnoreCase(action)) {
+			long issueId = Integer.parseInt(request.getParameter("issueID"));
+			BookService bookService = new BookServiceImpl();
+			List<BookIssued> issuedList = bookService.getAllIssuedBookList();
+			if(issuedList != null && issuedList.size() > 0) {
+				LocalDate today = LocalDate.now();
+				for(BookIssued bookIssued : issuedList) {
+					LocalDate dueDate = bookIssued.getDueDate();
+					if(dueDate.isAfter(today)) {
+						bookIssued.setReturnStatus("SÜRE VAR");
+					}
+					else if(dueDate.isEqual(today)) {
+						bookIssued.setReturnStatus("BUGÜN");
+					}
+					else {
+						bookIssued.setReturnStatus("GEÇMİŞ");
+					}
+				}
+			String returnDate = request.getParameter("returnDate");
+			String bookCondition = request.getParameter("bookCondition");
+			String returnNotes = request.getParameter("returnNotes");
+			
+			BookIssued bookIssued = new BookIssued();
+			bookIssued.setIssueID(issueId);
+			bookIssued.setReturnDate(LocalDate.parse(returnDate));
+			bookIssued.setBookCondition(bookCondition);
+			bookIssued.setReturnNotes(returnNotes);
+			
+			boolean isUpdated = bookService.updateBookReturn(bookIssued);
+			if(isUpdated) {
+				HttpSession session = request.getSession();
+			    session.setAttribute("successMessage", "Kitap verme işlemi başarılı!");
+			    response.sendRedirect("BookController?action=showReturnBook");
+			}
+			else {
+				request.setAttribute("errorMessage", "Kitap iadesi başarısız!");
+				request.setAttribute("issuedList", issuedList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/returnBook.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
 		else {
 			System.out.print("Herhangi bir method bulunamadı!");
 		}
-
+		}
 	}
 
 	/**

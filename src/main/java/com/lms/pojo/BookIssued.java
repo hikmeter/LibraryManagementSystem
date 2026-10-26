@@ -14,6 +14,7 @@ public class BookIssued {
 	private String bookCondition;
 	private String assignmentNotes;
 	private String returnNotes;
+	private String returnStatus;
 	
 	public long getIssueID() {
 		return issueID;
@@ -74,5 +75,11 @@ public class BookIssued {
 	}
 	public void setReturnNotes(String returnNotes) {
 		this.returnNotes = returnNotes;
+	}
+	public String getReturnStatus() {
+		return returnStatus;
+	}
+	public void setReturnStatus(String returnStatus) {
+		this.returnStatus = returnStatus;
 	}
 }

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>	
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -31,9 +32,9 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="navbar-nav d-flex flex-row align-items-center me-3">
-			<span class="text-white me-3"> Hoş geldin, Admin </span>
+			<span class="text-white me-3"> Hoş geldin, ${user.firstName } ${user.lastName } </span>
 			<div class="nav-item text-nowrap">
-				<a class="nav-link px-3" href="logout.jsp"> Çıkış Yap </a>
+				<a class="nav-link px-3" href="AuthenticationController?action=signOut"> Çıkış Yap </a>
 			</div>
 		</div>
 	</header>

@@ -29,4 +29,6 @@ public interface BookDao {
 	public BookIssued getBookIssuedById(long id);
 	
 	public boolean updateBookReturn(BookIssued bookIssued);
+	
+	public List<BookIssued> getAllIssuedBookListForDashboard();
 }

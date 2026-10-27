@@ -8,53 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hata - Kütüphane Yönetim Sistemi</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    body {
-        margin: 0;
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        background-color: #f8f9fa;
-        color: #212529;
-    }
-
-    .error-page {
-        max-width: 480px;
-        margin: 10vh auto;
-        padding: 0 1.5rem;
-    }
-
-    .error-card {
-        background-color: #ffffff;
-        border-radius: 12px;
-        padding: 2.5rem 2rem;
-        border: 1px solid #dee2e6;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-        text-align: center;
-    }
-
-    .error-code {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        color: #dc3545;
-    }
-
-    .error-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-    }
-
-    .error-message {
-        font-size: 1rem;
-        color: #6c757d;
-        margin-bottom: 2rem;
-        line-height: 1.6;
-    }
-
-    .action-buttons a {
-        min-width: 160px;
-    }
-</style>
+<link rel="stylesheet" href="assets/css/error.css">
 </head>
 <body>
 <div class="error-page">

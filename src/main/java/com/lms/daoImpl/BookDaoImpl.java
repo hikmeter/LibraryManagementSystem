@@ -551,4 +551,46 @@ public class BookDaoImpl implements BookDao {
 
 	    return bookIssued;
 	}
+
+	@Override
+	public List<BookIssued> getAllIssuedBookListForDashboard() {
+		ResultSet rs = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        ArrayList<BookIssued> bookList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT bi.*, b.*,u.* FROM book_issued bi inner join"
+            		+ " books b on bi.book_id = b.book_id inner join users u on u.user_id = bi.user_id WHERE bi.status = 'ISSUED'"
+            		+ " ORDER BY bi.issue_id DESC LIMIT 5";
+
+            connection = DbUtil.getConnection();
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                bookList.add(mapIssuedRecord(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bookList;
+	}
 	}

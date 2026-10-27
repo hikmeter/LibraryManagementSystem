@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.lms.pojo.User;
 import com.lms.service.UserService;
@@ -40,8 +41,9 @@ public class AuthenticationController extends HttpServlet {
 			UserService userService = new UserServiceImpl();
 			User user = userService.checkLogin(username, password);
 			if(user != null) {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/dashboard.jsp");
-				dispatcher.forward(request, response);
+				HttpSession session = request.getSession();
+				session.setAttribute("user", user);
+				response.sendRedirect("DashboardController?action=viewDashboard");
 			}
 			else {
 				request.setAttribute("errorMessage", "Hatalı e-posta adresi ya da şifre!");
@@ -50,6 +52,14 @@ public class AuthenticationController extends HttpServlet {
 			}
 		}
 		else if("showLogin".equalsIgnoreCase(action)) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/login.jsp");
+			dispatcher.forward(request, response);
+		}
+		else if("signOut".equalsIgnoreCase(action)) {
+			HttpSession session = request.getSession();
+			if(session != null) {
+				session.invalidate();
+			}
 			RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/login.jsp");
 			dispatcher.forward(request, response);
 		}

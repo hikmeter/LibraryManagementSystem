@@ -49,8 +49,13 @@ public class AuthenticationController extends HttpServlet {
 				dispatcher.forward(request, response);
 			}
 		}
+		else if("showLogin".equalsIgnoreCase(action)) {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/login.jsp");
+			dispatcher.forward(request, response);
+		}
 		else {
-			System.out.print("Herhangi bir method bulunamadı!");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/error.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
 

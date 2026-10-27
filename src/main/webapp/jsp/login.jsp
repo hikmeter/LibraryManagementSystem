@@ -37,11 +37,13 @@
             <div class="form-floating">
                 <input type="text" class="form-control" id="username" name="username" placeholder="Username">
                 <label for="username"><i class="bi bi-person-fill me-2"></i>E-Posta Adresi</label>
+                <div class="text-danger small" id="usernameError"></div>
             </div>
 
             <div class="form-floating">
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                 <label for="password"><i class="bi bi-lock-fill me-2"></i>Şifre</label>
+                <div class="text-danger small" id="passwordError"></div>
             </div>
 
             <button type="submit" class="btn btn-login">
@@ -67,6 +69,51 @@
             });
         });
     });
+</script>
+<script>
+    function setLoginValidation() {
+
+        const form = document.querySelector('.login-container form');
+
+        if (!form) {
+            return;
+        }
+
+        form.addEventListener('submit', function (event) {
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+
+            let hasError = false;
+
+            // Önceki hata mesajlarını temizle
+            usernameError.textContent = '';
+            passwordError.textContent = '';
+
+            if (!username) {
+                usernameError.textContent = 'Lütfen E-Posta Adresinizi Giriniz.';
+                hasError = true;
+            }
+
+            if (!password) {
+                passwordError.textContent = 'Lütfen Şifrenizi Giriniz.';
+                hasError = true;
+            }
+
+            if (hasError) {
+                event.preventDefault();
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setLoginValidation);
+    } else {
+        setLoginValidation();
+    }
 </script>
 </body>
 </html>
